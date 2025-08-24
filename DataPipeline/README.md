@@ -61,7 +61,7 @@ paper/
   base.json                # persistent store of *all seen* papers (for dedup)
   arxiv_search_result.json # latest scrape (ephemeral)
   pdf/                     # downloaded PDFs (deleted after text extraction)
-  txt/                     # one TXT per paper
+  txt/                     # one TXT per paper (deleted after loaded to all.txt)
     all.txt                # concatenated text of all papers
 ```
 
@@ -72,23 +72,32 @@ paper/
 Run immediately:
 
 ```bash
-python your_script.py
+python ArXiv_AI_Papers_PipelineV1.py
 ```
 
 This will:
 
-1. fetch the latest `cs.ai` search results (50 items by default)
+1. At scheduled time, it will trigger the process to fetch the latest `cs.ai` search results (50 items by default)
 2. diff against `paper/base.json`
 3. download the new PDFs
 4. convert to `.txt`
 5. merge into `paper/txt/all.txt`
 6. update `paper/base.json`
 
+## Workflow
+
+```
+[arXiv Search HTML] --requests--> [BeautifulSoup parse] --Paper dataclass-->
+[Diff vs base.json by identity_key] --> [Download NEW PDFs]
+           --> [PyMuPDF extract text] --> [Write per-paper .txt] --> [Merge to all.txt]
+                                          
+```
+
 ---
 
 ## Scheduling (07:00 Local Time)
 
-The script already includes APScheduler + tzlocal. It will schedule `run_pipeline` at **07:00** using the machine’s **local timezone**:
+The script already includes APScheduler + tzlocal. It will schedule `run_pipeline` at **07:00** using the machine’s **local timezone**. You can change the scheduled time as you need:
 
 ```python
 if __name__ == "__main__":
@@ -131,15 +140,6 @@ Common adjustments:
 * **Logging:** switch to `logging.DEBUG` during development.
 
 ---
-
-## How It Works (High Level)
-
-```
-[arXiv Search HTML] --requests--> [BeautifulSoup parse] --Paper dataclass-->
-[Diff vs base.json by identity_key] --> [Download NEW PDFs]
-           --> [PyMuPDF extract text] --> [Write per-paper .txt] --> [Merge to all.txt]
-                                          
-```
 
 Key implementation details:
 
