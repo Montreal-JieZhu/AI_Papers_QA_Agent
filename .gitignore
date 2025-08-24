@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Logs & caches
+*.log
+
+# Local IDE
+.vscode/
+
+paper/pdf/
+paper/txt/*.txt
+paper/txt/all.txt
+paper/arxiv_search_result.json
+paper/base.json
