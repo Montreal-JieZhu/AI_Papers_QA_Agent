@@ -42,13 +42,27 @@ tzlocal>=5.0
 
 ---
 
-## Installation
+### Create environment
 
-```bash
-# optional: create a virtual environment first
-python -m venv .venv
-. .venv/bin/activate           # Windows: .\.venv\Scripts\activate
+```
+python -m venv venv
+```
 
+### Activate environment
+
+Linux/macOS:
+```
+source venv/bin/activate
+```
+
+Windows: 
+```
+.\venv\Scripts\activate
+```
+
+### Install requirements
+
+```
 pip install -r requirements.txt
 ```
 
